@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Login Form</title>
+</head>
+<body>
+  <h2>Login</h2>
+
+  <form id="loginForm">
+    <label>Email:</label>
+    <input type="text" id="email">
+
+    <br><br>
+
+    <label>Password:</label>
+    <input type="password" id="password">
+
+    <br><br>
+
+    <button type="submit">Login</button>
+  </form>
+
+  <p id="message"></p>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const message = document.getElementById("message");
+
+      if (email === "" || password === "") {
+        message.textContent = "Please fill in all fields.";
+        return;
+      }
+
+      if (!email.includes("@")) {
+        message.textContent = "Email must contain @.";
+        return;
+      }
+
+      if (password.length < 8) {
+        message.textContent = "Password must be at least 8 characters.";
+        return;
+      }
+
+      const response = await fetch("/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      const result = await response.json();
+      message.textContent = result.message;
+    });
+  </script>
+</body>
+</html>
